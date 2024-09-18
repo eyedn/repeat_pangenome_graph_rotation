@@ -1,1 +1,22 @@
 # repeat_pangenome_graph_rotation
+
+- bubble variant type annotation
+	- Method: re-align bubble path string to RPGG
+	- binary: `/project/mchaisso_100/cmb-16/tsungyul/work/vntr/danbing-tk/bin/microdanbing`
+	- command: `microdanbing -k 21 -qs $rpgg -f $fa | gzip >$out`
+	- input
+		- dir: `/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa`
+		- each entry in the fasta file is a bubble path string (only one orientation, no reverse-complement)
+		- only simple bubbles are written, complex bubbles (loop, branch, or multiple simple bubbles. ~<5%) are not included
+	- post-processing output `*.aln.gz`
+		- format: src_tri, dst_tri, title, seq, seq_r, cigar_f, tr_f, cigar_r, tr_r
+			- src_tri: source TR index of the seq based on ground truth (irrelevant in this case since no ground truth)
+			- dst_tri: destination TR index i.e. mapped locus
+			- *_r: reverse-complement
+			- cigar_?: base level operation to align the read to RPGG
+			- tr_?: TR annotation. whether the kmer is in TR (`=`) or flank (`.`). `*` means un-aligned. Not relevant in this analysis.
+		- take the best aln from forward and reverse-complement based on minimal edit distance
+		- treat `*` as mismatch
+- 1kg metadata
+	- `/project/mchaisso_100/cmb-17/vntr_genotyping/1kgr/20130606_g1k_3202_samples_ped_population.simple.tsv`
+	- Sex: male=1, female=2 (think of # of chrX)
