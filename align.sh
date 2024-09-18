@@ -18,7 +18,7 @@
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
 #SBATCH --job-name=rpggaln
-#SBATCH --output=slurm.%A_%a.%x.log 
+#SBATCH --output=joblogs/slurm.%A_%a.%x.log 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=karatas@usc.edu
 
