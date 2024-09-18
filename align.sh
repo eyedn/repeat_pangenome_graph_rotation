@@ -1,4 +1,3 @@
-#!/bin/bash
 ###############################################################################
 #           Aydin Karatas
 #           Repeat Pangenome Graph Project
@@ -15,14 +14,14 @@
 #SBATCH --mem=16000
 #SBATCH --partition=qcb
 #SBATCH --account=mchaisso_100
-#SBATCH -N 1 #TODO: what does N do
-#SBATCH --job-name=micdan #TODO: new name
+#SBATCH -N 1
+#SBATCH --job-name=rpggaln
 #SBATCH --output=slurm.%A_%a.%x.log 
 ###SBATCH --constraint=xeon-2665,avx
 ###SBATCH --exclude=b10-10
 ###SBATCH --mail-type=ALL
 ###SBATCH --mail-user=karatas@usc.edu
-###SBATCH --array=0,1
+###SBATCH --array=1
 
 source ~/.bashrc
 set -eu
@@ -30,9 +29,10 @@ module load gcc/11.3.0 #usc samtools
 
 
 date
-gs=( $(cat /scratch1/tsungyul/n30488.hprc.full/1kg/genomes.txt) ) # n=3202
-g=${gs[$SLURM_ARRAY_TASK_ID]}
-echo $g
+echo "task no.: $SLURM_ARRAY_TASK_ID"
+g=$(head -n $SLURM_ARRAY_TASK_ID /scratch1/tsungyul/n30488.hprc.full/1kg/genomes.txt | \
+		tail -n 1)
+echo "genome: $g"
 
 rpgg=/scratch1/tsungyul/aydin/input/pan
 fa=/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa/$g.fa
