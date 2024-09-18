@@ -21,7 +21,7 @@
 #SBATCH --output=slurm.%A_%a.%x.log 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=karatas@usc.edu
-#SBATCH --array=1-2
+#SBATCH --array=1-3202
 
 
 source ~/.bashrc
