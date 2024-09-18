@@ -8,20 +8,19 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           align_bubbles.sh
+#           align.sh
 ###############################################################################
 
 #SBATCH --ntasks=1
 #SBATCH --time=48:00:00
 #SBATCH --mem=16000
-#SBATCH --partition=qcb
+#SBATCH --partition=chaissonlab
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
 #SBATCH --job-name=rpggaln
 #SBATCH --output=slurm.%A_%a.%x.log 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=karatas@usc.edu
-#SBATCH --array=1-3202
 
 
 source ~/.bashrc
