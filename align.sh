@@ -36,7 +36,7 @@ g=$(head -n $SLURM_ARRAY_TASK_ID /scratch1/tsungyul/n30488.hprc.full/1kg/genomes
 		tail -n 1)
 echo "genome: $g"
 
-rpgg=/scratch1/tsungyul/aydin/input/pan
+rpgg=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/pan
 fa=/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa/$g.fa
 out=/scratch1/tsungyul/aydin/output/$g.aln.gz
 
