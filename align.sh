@@ -11,20 +11,6 @@
 #           submit.sh
 ###############################################################################
 
-#SBATCH --ntasks=1
-#SBATCH --time=48:00:00
-#SBATCH --mem=16000
-#SBATCH --partition=qcb
-#SBATCH --account=mchaisso_100
-#SBATCH -N 1
-#SBATCH --job-name=rpggaln
-#SBATCH --output=slurm.%A_%a.%x.log 
-###SBATCH --constraint=xeon-2665,avx
-###SBATCH --exclude=b10-10
-###SBATCH --mail-type=ALL
-###SBATCH --mail-user=karatas@usc.edu
-###SBATCH --array=1
-
 source ~/.bashrc
 set -eu
 module load gcc/11.3.0 #usc samtools
