@@ -23,6 +23,6 @@
 ###SBATCH --exclude=b10-10
 ###SBATCH --mail-type=ALL
 ###SBATCH --mail-user=karatas@usc.edu
-###SBATCH --array=1
+###SBATCH --array=0-1
 
 ./align.sh --input=input_${SLURM_ARRAY_TASK_ID}
