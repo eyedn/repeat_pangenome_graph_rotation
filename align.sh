@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ###############################################################################
 #           Aydin Karatas
 #           Repeat Pangenome Graph Project
@@ -8,7 +10,7 @@
 #           ---
 #           submit.sh
 ###############################################################################
-#!/usr/bin/env bash
+
 #SBATCH --ntasks=1
 #SBATCH --time=48:00:00
 #SBATCH --mem=16000
