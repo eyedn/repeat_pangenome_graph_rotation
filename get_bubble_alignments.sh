@@ -24,8 +24,8 @@
 
 source ~/.bashrc
 module load conda
+conda init
 conda activate rpgg_proj
-module load python/3.11.3
 
 
 date
