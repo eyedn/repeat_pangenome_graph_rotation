@@ -42,3 +42,6 @@ out=/scratch1/tsungyul/aydin/output/$g.csv
 
 
 python3 ./get_bubble_alignments.py $g $aln $out
+
+echo "all done!"
+date
