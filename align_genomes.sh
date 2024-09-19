@@ -8,7 +8,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           align.sh
+#           align_genomes.sh
 ###############################################################################
 
 #SBATCH --ntasks=1
