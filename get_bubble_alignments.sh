@@ -18,7 +18,7 @@
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
 #SBATCH --job-name=cigar
-#SBATCH --output=joblogs/slurm.%A_%a.%x.log 
+#SBATCH --output=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/log/slurm.%A_%a.%x.log
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=karatas@usc.edu
 
