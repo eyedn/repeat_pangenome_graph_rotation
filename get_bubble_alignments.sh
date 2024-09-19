@@ -23,9 +23,9 @@
 #SBATCH --mail-user=karatas@usc.edu
 
 source ~/.bashrc
-module load python/3.11.3
 module load conda
 conda activate rpgg_proj
+module load python/3.11.3
 
 
 date
