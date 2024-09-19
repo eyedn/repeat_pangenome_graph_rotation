@@ -1,0 +1,35 @@
+---
+title: "RPGG Invariant Analysis"
+author: "Aydin Karatas"
+date: "2024-09-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+set.seed(seed = 123)
+data_dir <- "/Users/aydinkaratas/Documents/usc/chaisson_lab/data"
+cigar_file <- "cigar_data.csv"
+meta_file <- "20130606_g1k_3202_samples_ped_population.simple.tsv"
+```
+
+```{r combine meta data and edit dist data}
+meta <- read.csv(file = paste(data_dir, meta_file, sep = "/"), 
+                 header = T,
+                 sep = "\t")
+
+edit_dist <- read.csv(file = paste(data_dir, cigar_file, sep = "/"), 
+                      header = T, 
+                      row.names = 1)
+colnames(edit_dist) <- c("edit dist", "#X", "#D", "#I", "#*", "#(X,*)")
+edit_dist$g <- sapply(rownames(edit_dist), function(x) strsplit(x, "_")[[1]][1])
+
+data <- merge(edit_dist, meta, by.x = "g", by.y = "SampleID")
+data
+```
+
+```{r edit dist distribution}
+summary(data)
+```
+
+
