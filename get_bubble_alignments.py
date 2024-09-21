@@ -6,7 +6,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           get_bubble_alignments.sh
+#           get_bubble_alignments.py
 ###############################################################################
 from sys import argv
 import typing
