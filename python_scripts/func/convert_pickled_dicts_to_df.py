@@ -18,8 +18,9 @@ import pandas as pd
 
 def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
 
+    counter = 0
     combined_df = None
-    for i, file in enumerate(os.listdir(dir)):
+    for file in os.listdir(dir):
         file_path = os.path.join(dir, file)
         # only consider pickle files
         if file.endswith(".pickle") and os.path.isfile(file_path):            
@@ -36,7 +37,8 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
                     print(f"{g} added")
                 except Exception as e:
                     print(f"Error loading {file_path}: {e}")
-        # if i == 3:
-        #     break
+            counter += 1
+            if counter == 3:
+                break
     combined_df.fillna(0, inplace=True)
     return combined_df
