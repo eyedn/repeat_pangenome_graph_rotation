@@ -22,10 +22,10 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
     for i, file in enumerate(os.listdir(dir)):
         file_path = os.path.join(dir, file)
         # only consider pickle files
-        if file.endswith('.pickle') and os.path.isfile(file_path):            
+        if file.endswith(".pickle") and os.path.isfile(file_path):            
             # extract genome name as the unique row identifier
             g = file.split("/")[-1].split(".")[0]
-            with open(file_path, 'rb') as f:
+            with open(file_path, 'rt') as f:
                 try:
                     data: typing.Dict[str, int] = pickle.load(f)
                     temp_df = pd.DataFrame([data], index=[g])
