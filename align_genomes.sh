@@ -41,6 +41,10 @@ fa=/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa/$g.fa
 out=/scratch1/tsungyul/aydin/output/$g.aln.gz
 
 # align bubbles of genomes to reference rpgg
-/project/mchaisso_100/cmb-16/tsungyul/work/vntr/danbing-tk/bin/microdanbing -k 21 -qs $rpgg -f $fa | gzip >$out
+/project/mchaisso_100/cmb-16/tsungyul/work/vntr/danbing-tk/bin/microdanbing \
+	-k 21 \
+	-qs $rpgg \
+	-f $fa \
+	| gzip >$out
 
 date

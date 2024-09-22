@@ -11,7 +11,7 @@
 
 
 from sys import argv
-from python_func import get_aln_edits as fx
+from func import get_aln_edits as fx
 
 
 if __name__ == "__main__":

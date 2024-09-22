@@ -36,12 +36,11 @@ g=$(head -n $SLURM_ARRAY_TASK_ID /scratch1/tsungyul/n30488.hprc.full/1kg/genomes
 		tail -n 1)
 echo "genome: $g"
 
-rpgg=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/input/pan
 aln=/scratch1/tsungyul/aydin/output/$g.aln.gz
 out=/scratch1/tsungyul/aydin/output/$g.csv
 
 
-python3 ./get_invar_alignments.py $g $aln $out
+python3 ./python_scripts/get_invar_alignments.py $g $aln $out
 
 echo "all done!"
 date

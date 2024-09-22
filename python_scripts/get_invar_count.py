@@ -11,8 +11,8 @@
 
 
 from sys import argv
-from python_func import get_seq_count_dict as fx
-from python_func import pickle_obj as gx
+from func import get_seq_count_dict as fx
+from func import pickle_obj as gx
 
 
 if __name__ == "__main__":
