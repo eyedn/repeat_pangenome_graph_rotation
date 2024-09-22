@@ -18,7 +18,9 @@ from sklearn.preprocessing import StandardScaler
 
 invar_df = sys.argv[1]
 out = sys.argv[2]
-pc_cols = ['PC1', 'PC2', 'PC3', 'PC4', 'PC5']
+pc_cols = [
+    'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10'
+    ]
 
 data = pd.read_csv(invar_df, index_col = 0) 
 
