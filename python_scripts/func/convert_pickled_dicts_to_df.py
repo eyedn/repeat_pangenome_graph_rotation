@@ -10,31 +10,30 @@
 ###############################################################################
 
 
-from collections import defaultdict
 import os
+import typing
 import pickle
 import pandas as pd
 
 
-def convert_pickled_dicts_to_dfs(dir: os.PathLike) -> pd.DataFrame:
+def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
 
-    combined_dict = defaultdict(int) 
-    # get all pickled dict in dir
-    for files in os.listdir(dir):
-        for file in files:
-            if file.endswith('.pickle'):
-                file_path = os.path.join(dir, file)
-                # load pickled dict
-                with open(file_path, 'rb') as f:
-                    try:
-                        data = pickle.load(f)
-                        # sum values of common keys
-                        if isinstance(data, dict):
-                            for key, value in data.items():
-                                combined_dict[key] += value
-                        else:
-                            print(f"Error: {file_path} not a dict")
-                    except Exception as e:
-                        print(f"Error loading {file_path}: {e}")
-    combioned_df = pd.DataFrame(dict(combined_dict))
-    return combioned_df
+    combined_df = None
+    for file in os.listdir(dir):
+        file_path = os.path.join(dir, file)
+        # only consider pickle files
+        if file.endswith('.pickle') and os.path.isfile(file_path):            
+            # extract genome name as the unique row identifier
+            g = file.split("/")[-1].split(".")[0]
+            with open(file_path, 'rb') as f:
+                try:
+                    data: typing.Dict[str, int] = pickle.load(f)
+                    temp_df = pd.DataFrame([data], index=[g])
+                    if combined_df is None:
+                        combined_df = temp_df
+                    else:
+                        combined_df = pd.concat([combined_df, temp_df], axis=0)
+                except Exception as e:
+                    print(f"Error loading {file_path}: {e}")
+    combined_df.fillna(0, inplace=True)
+    return combined_df
