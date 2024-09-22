@@ -15,11 +15,8 @@ from func import convert_pickled_dicts_to_df as fx
 
 
 if __name__ == "__main__":
-    # dir = argv[1]
-    # out = argv[2]
-
-    dir = "/Users/aydinkaratas/Documents/usc/chaisson_lab/test"
-    out = "/Users/aydinkaratas/Documents/usc/chaisson_lab/test/test.csv"
+    dir = argv[1]
+    out = argv[2]
 
     combined_dict = fx.convert_pickled_dicts_to_df(dir)
     combined_dict.to_csv(out)
