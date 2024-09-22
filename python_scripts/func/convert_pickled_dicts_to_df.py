@@ -24,8 +24,8 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
         # only consider pickle files
         if file.endswith(".pickle") and os.path.isfile(file_path):            
             # extract genome name as the unique row identifier
-            g = file.split("/")[-1].split(".")[0]
-            with open(file_path, 'rt') as f:
+            g = file.split(".")[0]
+            with open(file_path, 'rb') as f:
                 try:
                     data: typing.Dict[str, int] = pickle.load(f)
                     temp_df = pd.DataFrame([data], index=[g])
@@ -36,7 +36,7 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
                     print(f"{g} added")
                 except Exception as e:
                     print(f"Error loading {file_path}: {e}")
-        if i == 3:
-            break
+        # if i == 3:
+        #     break
     combined_df.fillna(0, inplace=True)
     return combined_df
