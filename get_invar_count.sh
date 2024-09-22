@@ -41,7 +41,7 @@ rpgg=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/input/pan
 fa=/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa/$g.fa
 out=/scratch1/tsungyul/aydin/output/$g.pickle
 
-python3 ./get_invar_count.py $g $fa $out
+python3 ./get_invar_count.py $fa $out
 
 echo "all done!"
 date
