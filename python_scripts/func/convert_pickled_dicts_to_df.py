@@ -19,7 +19,6 @@ import pandas as pd
 
 def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
 
-    counter = 0
     combined_df = None
     for file in os.listdir(dir):
         file_path = os.path.join(dir, file)
@@ -39,8 +38,5 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
                 except Exception as e:
                     print(f"Error loading {file_path}: {e}")
                 sys.stdout.flush()
-            counter += 1
-            if counter == 100:
-                break
     combined_df.fillna(0, inplace=True)
     return combined_df
