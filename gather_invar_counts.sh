@@ -34,7 +34,7 @@ date
 input=/scratch1/tsungyul/aydin/output
 out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/invar_data.csv
 
-python3 ./python_scripts/gather_invar_count.py $input $out
+python3 ./python_scripts/gather_invar_counts.py $input $out
 
 echo "all done!"
 date
