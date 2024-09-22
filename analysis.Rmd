@@ -11,25 +11,201 @@ set.seed(seed = 123)
 data_dir <- "/Users/aydinkaratas/Documents/usc/chaisson_lab/data"
 cigar_file <- "cigar_data.csv"
 meta_file <- "20130606_g1k_3202_samples_ped_population.simple.tsv"
+invar_file <- "invar_pca.csv"
+
+library(tidyverse)
+library(ggpubr)
 ```
 
-```{r combine meta data and edit dist data}
+```{r combine meta data and edits data}
 meta <- read.csv(file = paste(data_dir, meta_file, sep = "/"), 
                  header = T,
                  sep = "\t")
 
-edit_dist <- read.csv(file = paste(data_dir, cigar_file, sep = "/"), 
+edits <- read.csv(file = paste(data_dir, cigar_file, sep = "/"), 
                       header = T, 
                       row.names = 1)
-colnames(edit_dist) <- c("edit dist", "#X", "#D", "#I", "#*", "#(X,*)")
-edit_dist$g <- sapply(rownames(edit_dist), function(x) strsplit(x, "_")[[1]][1])
+colnames(edits) <- c("edit dist", "#X", "#D", "#I", "#*", "#(X,*)")
+edits$g <- sapply(rownames(edits), 
+  function(x) strsplit(x, "_")[[1]][1])
+edits$main_invar <- apply(edits[, c("#D", "#I", "#(X,*)")], 1,
+  function(row) {
+    D <- row[1]
+    I <- row[2]
+    M <- row[3]
+    
+    if (D > I & D > M) {
+      return("D")
+    } else if (I > D & I > M) {
+      return("I")
+    } else if (M > D & M > I) {
+      return("M")
+    } else {
+      return("Complex")
+    }
+  })
 
-data <- merge(edit_dist, meta, by.x = "g", by.y = "SampleID")
-data
+meta_counts <- merge(edits, meta, by.x = "g", by.y = "SampleID")
 ```
 
-```{r edit dist distribution}
-summary(data)
+```{r gererate short invariants table and generate box plots}
+invar_short <- meta_counts %>%
+  group_by(g, main_invar, Population, Superpopulation) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  pivot_wider(
+    names_from = main_invar,   
+    values_from = count,      
+    values_fill = list(count = 0) 
+  ) %>%
+  mutate(across(c(D, I, M, Complex), as.numeric)) %>%
+  mutate(
+    total = D + I + M + Complex
+  )
+
+total_invar <- distinct(invar_short
+    [,c("g", "total", "Population", "Superpopulation")])
+
+pairwise.wilcox.test(
+  x = total_invar$total,
+  g = total_invar$Superpopulation, p.adjust.method = "BH")
+
+pairwise.wilcox.test(
+  x = total_invar$total,
+  g = total_invar$Population, p.adjust.method = "BH")
 ```
 
+```{r generate long invar table and median invar table}
+invar_long <- invar_short %>%
+  gather(key = "Variant", value = "Count", D, M, I, Complex) %>%
+  mutate(Variant = factor(Variant, levels = c("Complex", "I", "D", "M")))
 
+super_median <- invar_long %>%
+  group_by(Superpopulation) %>%
+  mutate(super_total = sum(Count)) %>%
+  group_by(Superpopulation, Variant, super_total) %>%
+  summarize(Median = median(Count), .groups = 'drop')
+
+pop_median <- invar_long %>%
+  group_by(Population) %>%
+  mutate(mean_total = mean(Count)) %>%
+  group_by(Population, Variant, mean_total) %>%
+  summarize(Median = median(Count), .groups = 'drop')
+```
+
+```{r plot median invar across population}
+super_box <- ggplot(invar_short,
+        aes(x = reorder(Superpopulation, -total))) +
+  geom_boxplot(aes(y = total, fill = Superpopulation)) +
+  scale_fill_brewer(palette = "Set3") +
+  xlab("Superpopulation") +
+  ylab("Variants per Genomes") +
+  ylim(0, 250) +
+  theme_pubclean() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right",
+        panel.background = element_blank())
+
+super_med_bar <- ggplot(super_median,
+        aes(x = reorder(Superpopulation, -super_total),
+            y = Median, fill = Variant)) +
+  geom_bar(stat = "identity", position = "stack", width = 0.8) +
+  labs(y = "Median Invariant Count") +
+  ylim(0, 250) +
+  theme_pubclean() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.title.x = element_blank(),
+        legend.position = "right",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggarrange(super_box, super_med_bar, labels = c("A", "B"), ncol = 2, nrow = 1)
+```
+
+```{r}
+pop_box <- ggplot(invar_short,
+        aes(x = reorder(Population, -total))) +
+  geom_boxplot(aes(y = total, fill = Superpopulation)) +
+  scale_fill_brewer(palette = "Set3") +
+  xlab("Population") +
+  ylab("Variants per Genomes") +
+  ylim(0, 250) +
+  theme_pubclean() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right",
+        panel.background = element_blank())
+
+pop_med_bar <- ggplot(pop_median,
+        aes(x = reorder(Population, -mean_total),
+            y = Median, fill = Variant)) +
+  geom_bar(stat = "identity", position = "stack", width = 0.8) +
+  labs(y = "Median Invariant Count") +
+  ylim(0, 250) +
+  theme_pubclean() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.title.x = element_blank(),
+        legend.position = "right",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggarrange(pop_box, pop_med_bar, labels = c("A", "B"), ncol = 2, nrow = 1)
+```
+
+```{r usign long table, generate waterfall of invariants across superpop.}
+cat_order <- c("AFR", "SAS", "EAS", "EUR", "AMR")
+invar_long <- invar_long %>%
+  mutate(Superpopulation = factor(Superpopulation, levels = cat_order)) %>%
+  arrange(Superpopulation, desc(total)) %>%
+  mutate(x_order = row_number())
+
+invar_waterfall <- ggplot(invar_long,
+       aes(x = reorder(g, x_order),
+           y = Count, fill = Variant)) +
+  geom_bar(stat = "identity", position = "stack", width = 1) +
+  labs(y = "Number of Invariants per Genome") +
+  ylim(0, 250) +
+  annotate("text", x = 889 / 2, y = 250,
+             label = "AFR") +
+  annotate("segment", 
+           x = 50, xend = 889 - 50,
+           y = 240, yend = 240, linewidth = 1) + 
+  annotate("text", x = 889 + (600 / 2), y = 250,
+             label = "SAS") +
+  annotate("segment", 
+           x = 889 + 50, xend = 889 + 600 - 50,
+           y = 240, yend = 240, linewidth = 1) + 
+  annotate("text", x = 889 +  600 + (585 / 2), y = 250,
+             label = "EAS") +
+  annotate("segment", 
+           x = 889 + 600 + 50, xend = 889 +  600 + 585 - 50,
+           y = 240, yend = 240, linewidth = 1) +
+  annotate("text", x = 889 +  600 + 585 + (633/2), y = 250,
+             label = "EUR") +
+  annotate("segment", 
+           x = 889 +  600 + 585 + 50, xend = 889 +  600 + 585 + 633 - 50,
+           y = 240, yend = 240, linewidth = 1) +
+  annotate("text", x = 889 +  600 + 585 + 633 + (487/2), y = 250,
+             label = "AMR") +
+  annotate("segment", 
+           x = 889 +  600 + 585 + 633 + 50,
+           xend = 889 +  600 + 585 + 633 + 487 - 50,
+           y = 240, yend = 240, linewidth = 1) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        legend.position = "none")
+invar_waterfall
+```
+
+```{r}
+invar_pca <- read.csv(file = paste(data_dir, invar_file, sep = "/"), 
+                      header = T,
+                      row.names = 1)
+```
+
+```{r}
+# Create a scatter plot of the PCA results
+invar_pca_dot <- ggplot(invar_pca, aes(x = PC1, y = PC2)) +
+  geom_point() +
+  theme_pubclean() +
+  labs(title = "PCA of Genomic Variants")
+invar_pca_dot
+```
