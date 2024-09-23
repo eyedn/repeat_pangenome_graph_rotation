@@ -13,7 +13,6 @@
 import sys
 import pandas as pd
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 
 
 invar_df = sys.argv[1]
@@ -22,17 +21,16 @@ pc_cols = [
     'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10'
     ]
 
-data = pd.read_csv(invar_df, index_col = 0) 
+# Load the data
+data = pd.read_csv(invar_df, index_col=0)
 
-# standardize the data and apply pca
-scaler = StandardScaler()
-data_scaled = scaler.fit_transform(data)
 print(f"starting pca for {len(pc_cols)} components")
 sys.stdout.flush()
-pca = PCA(n_components = len(pc_cols))  
-principal_components = pca.fit_transform(data_scaled)
+pca = PCA(n_components=len(pc_cols))  
+principal_components = pca.fit_transform(data)
 print("PCA completed, converting to df")
 sys.stdout.flush()
+
 
 # create df for pca and send to csv
 pca_df = pd.DataFrame(
