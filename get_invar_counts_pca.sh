@@ -32,9 +32,10 @@ conda activate rpgg_proj
 date
 
 input=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/invar_data.csv
+genomes_to_remove=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/genomes.1kg_plus_related.gt_HPRC.txt
 out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/invar_pca.csv
 
-python3 ./python_scripts/get_invar_counts_pca.py $input $out
+python3 ./python_scripts/get_invar_counts_pca.py $input $genomes_to_remove $out
 
 echo "all done!"
 date
