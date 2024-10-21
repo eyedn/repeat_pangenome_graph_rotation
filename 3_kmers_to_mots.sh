@@ -38,7 +38,7 @@ echo "batch no.: $SLURM_ARRAY_TASK_ID"
 echo "converting kmers to motifs"
 total_batches=$1
 get_1="/project/mchaisso_100/cmb-17/vntr_genotyping/rpgg2_k21_84k/hprc/full.v1/output8/cdbg/ki_tr.ccki_tr.pickle"
-get_2="/project/mchaisso_100/cmb-17/vntr_genotyping/rpgg2_k21_84k/hprc/full.v1/output8/cdbg/ki_tr.ccki_tr.pickle"
+get_2="/project/mchaisso_100/cmb-17/vntr_genotyping/rpgg2_k21_84k/hprc/full.v1/output8/cdbg/ks.ccks.tr_cck_ns.ki_map.pickle"
 kmers="/scratch1/tsungyul/n30488.hprc.full/1kg/genotype/*.tr.kmers"
 out="/scratch1/tsungyul/aydin/k2m_output"
 python3 ./python_scripts/convert_kmers_to_motifs.py $get_1 $get_2 $SLURM_ARRAY_TASK_ID $total_batches "$kmers" $out
