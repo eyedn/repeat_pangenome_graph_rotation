@@ -12,10 +12,11 @@
 ###############################################################################
 
 
-#SBATCH --ntasks=16
+#SBATCH --ntasks=1
 #SBATCH --time=48:00:00
 #SBATCH --mem=32000
-#SBATCH --partition=qcb
+#SBATCH --partition=chaissonlab
+#SBATCH --account=mchaisso_100
 #SBATCH -N 1
 #SBATCH --job-name=k2m
 #SBATCH --error=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/log/ipynb_stderr.%A_%a.%x.log 
