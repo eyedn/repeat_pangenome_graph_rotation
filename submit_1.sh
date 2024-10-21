@@ -8,7 +8,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           2_get_motif_data.sh
+#           submit_1.sh
 ###############################################################################
 
 
