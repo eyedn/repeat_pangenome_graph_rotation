@@ -41,6 +41,11 @@ echo "genome: $g"
 echo "aligning to rppg"
 rpgg=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/input/pan
 fa=/scratch1/tsungyul/n30488.hprc.full/1kg/varcall1/fa/$g.fa
+if [ ! -s "$fa" ]; then
+    echo "genome file $fa is empty"
+    exit 0
+fi
+
 danbing_aln=/scratch1/tsungyul/aydin/output/$g.aln.gz
 /project/mchaisso_100/cmb-16/tsungyul/work/vntr/danbing-tk/bin/microdanbing \
 	-k 21 \

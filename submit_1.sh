@@ -12,4 +12,4 @@
 ###############################################################################
 
 
-sbatch --array=1-3201 1_align_genome_motifs.sh  
+sbatch --array=1-3201 1_align_genome_rare.sh  

@@ -8,7 +8,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           2_get_motif_data.sh
+#           2_get_rare_data.sh
 ###############################################################################
 
 
@@ -40,19 +40,19 @@ head -n 1 $file_1 > $cigar_out && tail -n +2 -q $cigar_csv_dir/*.csv \
     >> $cigar_out
 echo "all done!"
 
-# 2. get data for tr motif counts
+# 2. get data for rare variant counts
 date
-echo "gather motif counts"
+echo "gather rare variant counts"
 counts_input=/scratch1/tsungyul/aydin/output
-counts_out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/motif_data.csv
+counts_out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/rare_data.csv
 python3 ./python_scripts/gather_motif_counts.py $counts_input $counts_out
 echo "all done!"
 
-# 3. get matrix for performing tr motif pca
+# 3. get matrix for performing rare variant pca
 date
 echo "all done!"
 genomes_to_remove=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/genomes.1kg_plus_related.gt_HPRC.txt
-pca_out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/motif_pca.csv
+pca_out=/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/rare_pca.csv
 python3 ./python_scripts/get_motif_counts_pca.py $counts_out $genomes_to_remove $pca_out
 echo "all done!"
 date
