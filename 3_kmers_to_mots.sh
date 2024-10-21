@@ -38,4 +38,4 @@ port=9888
 echo -e "
 ssh -N -L ${port}:${node}:${port} karatas@endeavour.usd.edu
 "
-jypyter lab --port=$port --no-browser --ip=$(hostname -s)
+jupyter lab --port=$port --no-browser --ip=$(hostname -s)
