@@ -25,8 +25,12 @@
 
 source ~/.bashrc
 module load conda
-conda init
-conda activate rpgg_proj
+source activate rpgg_proj
+
+# make sure numpy is found
+which python
+python -c "import sys; print(sys.path)"
+python -c "import numpy; print(numpy.__version__)"
 
 
 date
