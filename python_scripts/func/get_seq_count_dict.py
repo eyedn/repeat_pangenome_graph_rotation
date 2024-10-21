@@ -19,7 +19,7 @@ from Bio.Seq import Seq
 # given an fa file, generate a counts dict of each unique loc + seq
 def get_seq_count_dict(fa: os.PathLike[str]) -> typing.Dict[str, int]:
     
-    invar_dict: typing.Dict[str, int] = {}
+    motif_dict: typing.Dict[str, int] = {}
     with open(fa, "r") as f:
             lines = f.readlines()
 
@@ -41,8 +41,8 @@ def get_seq_count_dict(fa: os.PathLike[str]) -> typing.Dict[str, int]:
                     key = f"{loc}_{seq_f}"
 
                 # add seq
-                if key in invar_dict:
-                    invar_dict[key] += 1
+                if key in motif_dict:
+                    motif_dict[key] += 1
                 else:
-                    invar_dict[key] = 1
-    return invar_dict
+                    motif_dict[key] = 1
+    return motif_dict

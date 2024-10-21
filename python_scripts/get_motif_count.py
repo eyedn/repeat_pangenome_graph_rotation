@@ -6,17 +6,18 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           gather_invar_counts.py
+#           get_motif_count.py
 ###############################################################################
 
 
 from sys import argv
-from func import convert_pickled_dicts_to_df as fx
+from func import get_seq_count_dict as fx
+from func import pickle_obj as gx
 
 
 if __name__ == "__main__":
-    dir = argv[1]
+    fa = argv[1]
     out = argv[2]
 
-    combined_dict = fx.convert_pickled_dicts_to_df(dir)
-    combined_dict.to_csv(out)
+    invars = fx.get_seq_count_dict(fa)
+    gx.pickle_obj(invars, out)

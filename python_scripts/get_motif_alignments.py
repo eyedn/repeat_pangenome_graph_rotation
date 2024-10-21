@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 ###############################################################################
 #           Aydin Karatas
 #           Repeat Pangenome Graph Project
@@ -8,12 +6,18 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           cat_aln_csv.sh
+#           get_motif_alignments.py
 ###############################################################################
 
 
-csv_dir="/scratch1/tsungyul/aydin/output"
-file_1="$csv_dir/HG00096.csv"
-out="/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/data/cigar_data.csv"
+from sys import argv
+from func import get_aln_edits as fx
 
-head -n 1 $file_1 > $out && tail -n +2 -q $csv_dir/*.csv >> $out
+
+if __name__ == "__main__":
+    g = argv[1]
+    aln = argv[2]
+    out = argv[3]
+
+    aln_edits = fx.get_aln_edits(g, aln)
+    aln_edits.to_csv(out)

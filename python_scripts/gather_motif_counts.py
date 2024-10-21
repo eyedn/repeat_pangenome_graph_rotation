@@ -6,18 +6,17 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           get_invar_alignments.py
+#           gather_motif_counts.py
 ###############################################################################
 
 
 from sys import argv
-from func import get_aln_edits as fx
+from func import convert_pickled_dicts_to_df as fx
 
 
 if __name__ == "__main__":
-    g = argv[1]
-    aln = argv[2]
-    out = argv[3]
+    dir = argv[1]
+    out = argv[2]
 
-    aln_edits = fx.get_aln_edits(g, aln)
-    aln_edits.to_csv(out)
+    combined_dict = fx.convert_pickled_dicts_to_df(dir)
+    combined_dict.to_csv(out)
