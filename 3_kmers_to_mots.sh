@@ -36,6 +36,6 @@ XDG_RUNTIM_DIR=""
 node=$(hostname -s)
 port=9888
 echo -e "
-ssh -N -L ${port}:${node}:${port} karatas@endeavour.usd.edu
+ssh -N -L ${port}:${node}:${port} karatas@endeavour.usc.edu
 "
 jupyter lab --port=$port --no-browser --ip=$(hostname -s)
