@@ -58,13 +58,13 @@ echo "all done!"
 date
 echo "getting alignment distances"
 aln_data=/scratch1/tsungyul/aydin/output/$g.csv
-python3 ./python_scripts/get_motif_alignments.py $g $danbing_aln $aln_data
+python3 ./python_scripts/get_rare_alignments.py $g $danbing_aln $aln_data
 echo "all done!"
 
 # 3. create python dictionaries for motif existance
 date
 echo "algning to rppg"
 motif_out=/scratch1/tsungyul/aydin/output/$g.pickle
-python3 ./python_scripts/get_motif_count.py $fa $motif_out
+python3 ./python_scripts/get_rare_count.py $fa $motif_out
 echo "all done!"
 date

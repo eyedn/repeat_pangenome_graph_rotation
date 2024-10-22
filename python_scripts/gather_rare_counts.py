@@ -6,7 +6,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           gather_motif_counts.py
+#           gather_rare_counts.py
 ###############################################################################
 
 

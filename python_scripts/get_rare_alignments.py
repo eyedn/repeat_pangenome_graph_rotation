@@ -6,7 +6,7 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           get_motif_alignments.py
+#           get_rare_alignments.py
 ###############################################################################
 
 
