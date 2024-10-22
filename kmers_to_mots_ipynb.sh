@@ -38,4 +38,7 @@ port=9888
 echo -e "
 ssh -N -L ${port}:${node}:${port} karatas@endeavour.usc.edu
 "
+echo -e "
+localhost:${port}
+"
 jupyter lab --port=$port --no-browser --ip=$(hostname -s)
