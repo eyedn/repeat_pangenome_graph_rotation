@@ -80,7 +80,7 @@ def compute_gt_cgt_single_batch(batch_num, kmer_dir, out_dir, ki_map, tr_cck_ns,
 if __name__ == "__main__":
     get_1_file = sys.argv[1]
     get_2_file = sys.argv[2]
-    batch_num = int(sys.argv[3]) 
+    batch_num = int(sys.argv[3]) - 1
     total_batches = int(sys.argv[4])
     kmers = sys.argv[5]
     out = sys.argv[6]
