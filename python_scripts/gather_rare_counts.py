@@ -44,7 +44,8 @@ def convert_pickled_dicts_to_df(dir: os.PathLike) -> pd.DataFrame:
     # fill the DataFrame with 0s or 1s
     for genome, data in all_data:
         combined_df.loc[genome] = pd.Series(data)
-    return combined_df.astype(int)
+    combined_df = combined_df.fillna(0)
+    return combined_df
 
 if __name__ == "__main__":
     dir = argv[1]

@@ -15,7 +15,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 
 
-invar_df = sys.argv[1]
+rare_df = sys.argv[1]
 genomes_to_remove = sys.argv[2]
 out = sys.argv[3]
 pc_cols = [
@@ -23,7 +23,7 @@ pc_cols = [
     ]
 
 # load variant counts
-data = pd.read_csv(invar_df, index_col=0)
+data = pd.read_csv(rare_df, index_col=0)
 
 # load test genomes labels that will not be included in the pca
 with open(genomes_to_remove, 'r') as f:
