@@ -42,11 +42,11 @@ def compute_gt_cgt_single_batch(batch_num, kmer_dir, out_dir, ki_map, tr_cck_ns,
     
     BS = ng // NB
     BS_ = BS if batch_num != NB-1 else ng - BS*batch_num
-    print(f"BS: {BS}", end="")
-    print(f"BS_: {BS_}", end="")
+    print(f"BS: {BS}")
+    print(f"BS_: {BS_}")
     sys.stdout.flush()
 
-    print(f"batch {batch_num}: loading gt... ", end="")
+    print(f"batch {batch_num}: loading gt... ")
     sys.stdout.flush()
     start_time = time.time()
     gt = np.zeros([NK, BS_], dtype=np.int32)
@@ -56,7 +56,7 @@ def compute_gt_cgt_single_batch(batch_num, kmer_dir, out_dir, ki_map, tr_cck_ns,
     print(f"Loading gt for batch {batch_num} took {load_time:.2f} seconds")
     sys.stdout.flush()
 
-    print(f"computing cgt... ", end="")
+    print(f"computing cgt... ")
     sys.stdout.flush()
     start_time = time.time()
     cgt = np.zeros([NCCK, BS_], dtype=np.float32)
@@ -67,7 +67,7 @@ def compute_gt_cgt_single_batch(batch_num, kmer_dir, out_dir, ki_map, tr_cck_ns,
     print(f"Computing cgt for batch {batch_num} took {compute_time:.2f} seconds")
     sys.stdout.flush()
 
-    print("dumping gt... ", end="")
+    print("dumping gt... ")
     sys.stdout.flush()
     with open(f"{out_dir}/gt.{batch_num}.pickle", 'wb') as f:
         pickle.dump(gt, f, protocol=pickle.HIGHEST_PROTOCOL)
