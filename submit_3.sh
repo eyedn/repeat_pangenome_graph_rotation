@@ -13,4 +13,4 @@
 
 
 max_batches=40
-sbatch --array=1-$max_batches 3_kmers_to_mots.sh $max_batches 
+sbatch --array=1-$max_batches%20 3_kmers_to_mots.sh $max_batches 
