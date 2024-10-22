@@ -42,8 +42,10 @@ def compute_gt_cgt_single_batch(batch_num, kmer_dir, out_dir, ki_map, tr_cck_ns,
     
     BS = ng // NB
     BS_ = BS if batch_num != NB-1 else ng - BS*batch_num
+    print(f"ng: {ng}")
     print(f"BS: {BS}")
     print(f"BS_: {BS_}")
+    print(f"batch_num*BS: {batch_num*BS}")
     sys.stdout.flush()
 
     print(f"batch {batch_num}: loading gt... ")
