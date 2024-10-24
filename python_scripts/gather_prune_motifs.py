@@ -33,6 +33,7 @@ def gather_motifs(gt_HPRC, NCCK, NB, out_dir):
     ng = genomes.size
     BS = ng//NB
     
+    print(f"Loading batches...")
     print(BS, ng, NB)
     sys.stdout.flush()
     cgt = np.zeros([NCCK,ng], dtype=np.float32)
@@ -69,30 +70,26 @@ def compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir):
     NL = len(ccki_tr)
     NM = len(ccks)
     pruned = np.zeros(NM, dtype=bool)
-    print(NM)
 
     print("Pruning...")
+    print(NL, NM)
     sys.stdout.flush()
     for i in range(NL):
         locus_s = ccki_tr[i-1] if i != 0 else 0
         locus_e = ccki_tr[i]
-        if pruned[locus_s]:
-            continue
         while locus_s != locus_e:
-            locus_m = locus_s + 1
-            while locus_m <= locus_e:
-                if not pruned[locus_m]:
-                    r2 = r2_score(acgt[locus_s], acgt[locus_m])
-                    if r2 > r2_threshold:
-                        pruned[locus_m] = True
-                locus_m += 1
+            if not pruned[locus_s]:
+                locus_m = locus_s + 1
+                while locus_m <= locus_e:
+                    if not pruned[locus_m]:
+                        r2 = r2_score(acgt[locus_s], acgt[locus_m])
+                        if r2 > r2_threshold:
+                            pruned[locus_m] = True
+                    locus_m += 1
             locus_s += 1
-        if (i + 1) % 500 == 0:
-            print(f"{i+1} loci pruned")
-            sys.stdout.flush()
     print(f"Dumping pruned...")
     sys.stdout.flush()
-    with open(f"{out_dir}/cck_pruned_{r2_threshold}_.pickle", 'wb') as f:
+    with open(f"{out_dir}/cck_pruned_{r2_threshold}.pickle", 'wb') as f:
         pickle.dump(pruned, f, protocol=pickle.HIGHEST_PROTOCOL)
     return pruned
 
