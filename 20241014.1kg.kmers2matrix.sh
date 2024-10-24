@@ -8,13 +8,13 @@
 #           Department of Quantitative and Computational Biology 
 #           Chaisson Lab Rotation
 #           ---
-#           kmers_to_mots_ipynb.sh
+#           20241014.1kg.kmers2matrix.sh
 ###############################################################################
 
 
 #SBATCH --ntasks=1
-#SBATCH --time=48:00:00
-#SBATCH --mem=32000
+#SBATCH --time=12:00:00
+#SBATCH --mem=48000
 #SBATCH --partition=chaissonlab
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
