@@ -11,7 +11,8 @@
 #           4_get_all_mots.sh
 ###############################################################################
 
-
-max_batches=40 
 r2=$1
-sbatch 4_gather_prune_motifs.sh $max_batches $r2
+max_batches=40 
+num_loci=30488
+num_jobs=10
+sbatch --array=1-$num_jobs 4_gather_prune_motifs.sh $max_batches $r2 $num_loci $num_jobs

@@ -14,7 +14,7 @@
 
 #SBATCH --ntasks=1
 #SBATCH --time=24:00:00
-#SBATCH --mem=40000
+#SBATCH --mem=36000
 #SBATCH --partition=chaissonlab
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
@@ -42,6 +42,19 @@ get_2="/project/mchaisso_100/cmb-17/vntr_genotyping/rpgg2_k21_84k/hprc/full.v1/o
 gt_HPRC="/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/LD_prune/input/genomes.txt"
 HPRC_chr1_cov="/project/mchaisso_100/cmb-17/vntr_genotyping/aydin/LD_prune/input/1kg_all.cov.tsv"
 out="/scratch1/tsungyul/aydin/k2m_output"
-python3 ./python_scripts/gather_prune_motifs.py $get_1 $get_2 $gt_HPRC $HPRC_chr1_cov $total_batches $r2_threshold $out
+
+# calculate start and end indices based on task ID
+num_loci=$3
+num_jobs=$4
+loci_per_job=$((num_loci / num_jobs))
+start_idx=$(( (SLURM_ARRAY_TASK_ID - 1) * loci_per_job ))
+end_idx=$(( SLURM_ARRAY_TASK_ID * loci_per_job - 1 ))
+
+# Handle the last job, make sure it processes all remaining loci
+if [ $SLURM_ARRAY_TASK_ID -eq $num_jobs ]; then
+    end_idx=$((num_loci - 1))
+fi
+
+python3 ./python_scripts/gather_prune_motifs.py $get_1 $get_2 $gt_HPRC $HPRC_chr1_cov $total_batches $r2_threshold $out $start_idx $end_idx
 echo "all done!"
 date
