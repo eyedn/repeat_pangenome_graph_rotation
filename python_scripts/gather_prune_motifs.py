@@ -92,7 +92,7 @@ def compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir):
             sys.stdout.flush()
     print(f"Dumping pruned...")
     sys.stdout.flush()
-    with open(f"{out_dir}/cck_pruned.pickle", 'wb') as f:
+    with open(f"{out_dir}/cck_pruned_{r2_threshold}_.pickle", 'wb') as f:
         pickle.dump(pruned, f, protocol=pickle.HIGHEST_PROTOCOL)
     return pruned
 
