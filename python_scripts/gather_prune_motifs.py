@@ -73,7 +73,7 @@ def compute_partial_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir, start_idx,
     pruned = np.zeros(pruned_size, dtype=bool)
     print(f"Pruning loci from {start_idx} to {end_idx}...")
     print(f"r^2 threshold = {r2_threshold}")
-    print(f"loci {start_idx}: {ccki_tr[start_idx]} motifs \nloci {end_idx}: {ccki_tr[end_idx]} motifs \npartial motif count: {pruned_size} / {len(ccki_tr)}")
+    print(f"loci {start_idx}: {ccki_tr[start_idx]} motifs \nloci {end_idx}: {ccki_tr[end_idx]} motifs \npartial motif count: {pruned_size} / {len(ccks)}")
     sys.stdout.flush()
     start_time = time.time()
 
