@@ -87,6 +87,8 @@ def compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir):
                             pruned[locus_m] = True
                     locus_m += 1
             locus_s += 1
+        if (i + 1 ) % 500 == 0:
+            print(f"{i} loci pruned")
     print(f"Dumping pruned...")
     sys.stdout.flush()
     with open(f"{out_dir}/cck_pruned_{r2_threshold}.pickle", 'wb') as f:
@@ -109,24 +111,21 @@ if __name__ == "__main__":
     NCCK = len(ccks)
     NB = 40
 
-    cgt = None
-    if os.path.exists(f"{out}/cgt.pickle"):
-        print("cgt file found")
-        with open(f"{out}/acgt.pickle", 'rb') as f:
-            acgt =  pickle.load(f)
-    else:
-        print("creating cgt file")
-        cgt = gather_motifs(gt_HPRC, NCCK, NB, out)
-        acgt =  adjust_coverage(cgt, gt_HPRC, HPRC_chr1_cov, out)
-
     acgt = None
     if os.path.exists(f"{out}/acgt.pickle"):
         print("acgt file found")
         with open(f"{out}/acgt.pickle", 'rb') as f:
             acgt =  pickle.load(f)
     else:
+        cgt = None
+        if os.path.exists(f"{out}/cgt.pickle"):
+            print("cgt file found")
+            with open(f"{out}/acgt.pickle", 'rb') as f:
+                cgt = gather_motifs(gt_HPRC, NCCK, NB, out)
+        else:
+            print("creating cgt file")
+            cgt = gather_motifs(gt_HPRC, NCCK, NB, out)
         print("creating acgt file")
-        cgt = gather_motifs(gt_HPRC, NCCK, NB, out)
         acgt =  adjust_coverage(cgt, gt_HPRC, HPRC_chr1_cov, out)
     
     cck_pruned = compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out)
