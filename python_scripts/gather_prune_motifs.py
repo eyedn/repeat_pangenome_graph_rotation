@@ -132,4 +132,4 @@ if __name__ == "__main__":
         cgt = gather_motifs(gt_HPRC, NCCK, NB, out)
         acgt =  adjust_coverage(cgt, gt_HPRC, HPRC_chr1_cov, out)
     
-    cck_pruned = compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold)
+    cck_pruned = compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out)
