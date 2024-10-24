@@ -89,6 +89,7 @@ def compute_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir):
             locus_s += 1
         if (i + 1 ) % 500 == 0:
             print(f"{i} loci pruned")
+            sys.stdout.flush()
     print(f"Dumping pruned...")
     sys.stdout.flush()
     with open(f"{out_dir}/cck_pruned_{r2_threshold}.pickle", 'wb') as f:
