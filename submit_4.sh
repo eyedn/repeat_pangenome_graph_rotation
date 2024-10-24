@@ -12,4 +12,6 @@
 ###############################################################################
 
 
-sbatch 3_kmers_to_mots.sh 
+max_batches=40 
+r2=0.8
+sbatch 4_get_all_mots.sh $max_batches $r2
