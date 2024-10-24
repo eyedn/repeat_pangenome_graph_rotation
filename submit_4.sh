@@ -14,4 +14,4 @@
 
 max_batches=40 
 r2=0.8
-sbatch 4_get_all_mots.sh $max_batches $r2
+sbatch 4_gather_prune_motifs.sh $max_batches $r2
