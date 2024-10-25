@@ -73,7 +73,7 @@ def compute_partial_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir, start_idx,
     pruned = np.zeros(pruned_size, dtype=bool)
     print(f"Pruning loci from {start_idx} to {end_idx}...")
     print(f"r^2 threshold = {r2_threshold}")
-    print(f"loci {start_idx}: {ccki_tr[start_idx]} motifs \nloci {end_idx}: {ccki_tr[end_idx]} motifs \npartial motif count: {pruned_size} / {len(ccks)}")
+    print(f"partial motif count: {pruned_size} / {len(ccks)}")
     sys.stdout.flush()
     start_time = time.time()
 
@@ -97,7 +97,7 @@ def compute_partial_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir, start_idx,
             curr_m += 1
         if (i + 1 - init_locus_start) % 100 == 0:
             compute_time = time.time() - start_time
-            print(f"Pruned {i + 1} loci in {compute_time:.2f} seconds")
+            print(f"Pruned {i + 1 - init_locus_start} loci in {compute_time:.2f} seconds")
             sys.stdout.flush()
         
     # pickle vector of pruned status
