@@ -95,9 +95,9 @@ def compute_partial_ld_r2(acgt, ccki_tr, ccks, r2_threshold, out_dir, start_idx,
                             pruned[iter_m - init_locus_start] = True
                     iter_m += 1
             curr_m += 1
-        if (i + 1 - init_locus_start) % 100 == 0:
+        if (i + 1 - start_idx) % 100 == 0:
             compute_time = time.time() - start_time
-            print(f"Pruned {i + 1 - init_locus_start} loci in {compute_time:.2f} seconds")
+            print(f"Pruned {i + 1 - start_idx} loci in {compute_time:.2f} seconds")
             sys.stdout.flush()
         
     # pickle vector of pruned status
