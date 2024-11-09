@@ -42,6 +42,6 @@ out="/scratch1/tsungyul/aydin/k2m_output"
 r2_threshold=$1
 
 # get all significance testing for motifs
-python3 ./python_scripts/gather_prune_motifs.py "$mask_g" "$meta" "$rare_pca" "$out" "$r2_threshold"
+python3 ./python_scripts/get_sig_motifs.py "$mask_g" "$meta" "$rare_pca" "$out" "$r2_threshold"
 echo "all done!"
 date
