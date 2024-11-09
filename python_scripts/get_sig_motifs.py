@@ -17,7 +17,7 @@ import os
 from statsmodels.formula.api import ols
 from statsmodels.stats.multitest import multipletests
 import sys
-
+import time
 
 if __name__ == "__main__":
     mask_g = sys.argv[1]
@@ -86,6 +86,7 @@ if __name__ == "__main__":
     population_pvals = []
     superpopulation_pvals = []
     total_kept_motifs = len(kept_motifs_df.columns)
+    start_time = time.time()
     for i, motif in enumerate(kept_motifs_df.columns):
         # population regression
         model_pop = ols(f"{motif} ~ C(Population) + Sex + PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10", 
@@ -101,8 +102,9 @@ if __name__ == "__main__":
         # superpop_pvalues = [pval for key, pval in model_superpop.pvalues.items() if 'C(Superpopulation)' in key]
         # superpopulation_pvals.append(min(superpop_pvalues))  # use the minimum p-value for superpopulation levels
 
-        if  (i % 10000) == 0:
-            print(f"Processed {i + 1} motifs")
+        if  (i + 1) % 10000 == 0:
+            compute_time = time.time() - start_time
+            print(f"Processed {i + 1} motifs in {compute_time:.2f} seconds")
             sys.stdout.flush()
 
     population_pvals = np.array(population_pvals)
