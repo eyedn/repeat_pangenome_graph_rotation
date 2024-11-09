@@ -14,7 +14,7 @@
 
 #SBATCH --ntasks=1
 #SBATCH --time=48:00:00
-#SBATCH --mem=32000
+#SBATCH --mem=64000
 #SBATCH --partition=chaissonlab
 #SBATCH --account=mchaisso_100
 #SBATCH -N 1
