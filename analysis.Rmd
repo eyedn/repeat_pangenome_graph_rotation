@@ -9,12 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 set.seed(seed = 123)
 data_dir <- "/Users/aydinkaratas/Documents/usc/chaisson_lab/data"
+figs_dir <- "/Users/aydinkaratas/Documents/usc/chaisson_lab/figures"
 cigar_file <- "cigar_data.csv"
 meta_file <- "20130606_g1k_3202_samples_ped_population.simple.tsv"
-invar_file <- "invar_pca.csv"
+test_g_file <- "genomes.1kg_plus_related.gt_HPRC.txt"
+invar_file <- "rare_pca.csv"
 
 library(tidyverse)
 library(ggpubr)
+library(RColorBrewer)
+library(svglite)
 ```
 
 ```{r combine meta data and edits data}
@@ -23,8 +27,8 @@ meta <- read.csv(file = paste(data_dir, meta_file, sep = "/"),
                  sep = "\t")
 
 edits <- read.csv(file = paste(data_dir, cigar_file, sep = "/"), 
-                      header = T, 
-                      row.names = 1)
+                  header = T, 
+                  row.names = 1)
 colnames(edits) <- c("edit dist", "#X", "#D", "#I", "#*", "#(X,*)")
 edits$g <- sapply(rownames(edits), 
   function(x) strsplit(x, "_")[[1]][1])
@@ -46,6 +50,10 @@ edits$main_invar <- apply(edits[, c("#D", "#I", "#(X,*)")], 1,
   })
 
 meta_counts <- merge(edits, meta, by.x = "g", by.y = "SampleID")
+
+genomes_to_remove <- read.csv(file = paste(data_dir, test_g_file, sep = "/"),
+                              header = FALSE)
+meta_counts <- meta_counts[!(meta_counts$g %in% genomes_to_remove$V1), ]
 ```
 
 ```{r gererate short invariants table and generate box plots}
@@ -86,11 +94,16 @@ super_median <- invar_long %>%
   summarize(Median = median(Count), .groups = 'drop')
 
 pop_median <- invar_long %>%
-  group_by(Population) %>%
-  mutate(mean_total = mean(Count)) %>%
-  group_by(Population, Variant, mean_total) %>%
+  group_by(Population, Variant) %>%
   summarize(Median = median(Count), .groups = 'drop')
-```
+
+pop_med_tot <- invar_short %>%
+  group_by(Population) %>%
+  summarize(med_total = median(total), .groups = 'drop')
+
+pop_median <- merge(pop_median, pop_med_tot,
+                    by.x = "Population", by.y = "Population")
+```   
 
 ```{r plot median invar across population}
 super_box <- ggplot(invar_short,
@@ -117,12 +130,19 @@ super_med_bar <- ggplot(super_median,
         legend.position = "right",
         axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggarrange(super_box, super_med_bar, labels = c("A", "B"), ncol = 2, nrow = 1)
+super_var_plot <- ggarrange(super_box, super_med_bar,
+                            labels = c("A", "B"), ncol = 2, nrow = 1)
+super_var_plot
+
+ggsave(filename = paste0(figs_dir, "/super_bar_box.svg"),
+         plot = super_var_plot,
+         height = 7,
+         width = 15)
 ```
 
 ```{r}
 pop_box <- ggplot(invar_short,
-        aes(x = reorder(Population, -total))) +
+        aes(x = reorder(Population, -total, FUN = median))) +
   geom_boxplot(aes(y = total, fill = Superpopulation)) +
   scale_fill_brewer(palette = "Set3") +
   xlab("Population") +
@@ -134,7 +154,7 @@ pop_box <- ggplot(invar_short,
         panel.background = element_blank())
 
 pop_med_bar <- ggplot(pop_median,
-        aes(x = reorder(Population, -mean_total),
+        aes(x = reorder(Population, -med_total),
             y = Median, fill = Variant)) +
   geom_bar(stat = "identity", position = "stack", width = 0.8) +
   labs(y = "Median Invariant Count") +
@@ -145,7 +165,14 @@ pop_med_bar <- ggplot(pop_median,
         legend.position = "right",
         axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggarrange(pop_box, pop_med_bar, labels = c("A", "B"), ncol = 2, nrow = 1)
+pop_var_plot <- ggarrange(pop_box, pop_med_bar,
+                          labels = c("A", "B"), ncol = 2, nrow = 1)
+pop_var_plot
+
+ggsave(filename = paste0(figs_dir, "/pop_bar_box.svg"),
+         plot = pop_var_plot,
+         height = 7,
+         width = 15)
 ```
 
 ```{r usign long table, generate waterfall of invariants across superpop.}
@@ -155,7 +182,7 @@ invar_long <- invar_long %>%
   arrange(Superpopulation, desc(total)) %>%
   mutate(x_order = row_number())
 
-invar_waterfall <- ggplot(invar_long,
+super_waterfall <- ggplot(invar_long,
        aes(x = reorder(g, x_order),
            y = Count, fill = Variant)) +
   geom_bar(stat = "identity", position = "stack", width = 1) +
@@ -192,20 +219,106 @@ invar_waterfall <- ggplot(invar_long,
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         legend.position = "none")
-invar_waterfall
+super_waterfall
+
+ggsave(filename = paste0(figs_dir, "/super_waterfall.svg"),
+         plot = super_waterfall,
+         height = 7,
+         width = 15)
 ```
 
 ```{r}
 invar_pca <- read.csv(file = paste(data_dir, invar_file, sep = "/"), 
                       header = T,
                       row.names = 1)
+invar_pca$g <- rownames(invar_pca)
+invar_pca <- merge(invar_pca, meta, by.x = "g", by.y = "SampleID")
+
+pop_color_vec = c("GBR" = "#C6DBEF","FIN" = "#9ECAE1", "IBS" = "#6BAED6", "CEU" = "#2171B5","TSI" = "#08519C",
+              "CHS" = "#A1D99B", "CDX" = "#74C476", "KHV" = "#41AB5D", "CHB" = "#006D2C", "JPT" = "#00441B",
+              "PUR" = "#636363", "CLM" = "#969696", "PEL" = "#BDBDBD","MXL" = "#BDBDBD", 
+              "ITU" = "#9E9AC8","GIH" = "#807DBA", "STU" = "#6A51A3","PJL" = "#54278F","BEB" = "#3F007D",
+              "GWD" = "#FCBBA1", "ESN" = "#FC9272", "MSL" = "#FB6A4A","YRI" = "#EF3B2C","LWK" = "#CB181D","ASW" = "#A50F15", "ACB" = "#67000D")
 ```
 
 ```{r}
-# Create a scatter plot of the PCA results
-invar_pca_dot <- ggplot(invar_pca, aes(x = PC1, y = PC2)) +
+super_pca_dot <- ggplot(invar_pca,
+    aes(x = PC1, y = PC2, color = Superpopulation)) +
   geom_point() +
   theme_pubclean() +
-  labs(title = "PCA of Genomic Variants")
-invar_pca_dot
+  scale_fill_brewer(palette = "Set3") +
+  theme(legend.position = "right")
+super_pca_dot
+
+ggsave(filename = paste0(figs_dir, "/super_pca.svg"),
+         plot = super_pca_dot,
+         height = 7,
+         width = 10)
+```
+
+```{r}
+pop_pca_dot <- ggplot(invar_pca,
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  theme_pubclean() +
+  labs(title = "AFR = Reds, EAS = Greens, AMR = Grays, EUR = Blues, SAS = Purples") + 
+  theme(legend.position = "right") +
+  scale_color_manual(values = pop_color_vec)
+pop_pca_dot
+
+ggsave(filename = paste0(figs_dir, "/pop_pca.svg"),
+         plot = pop_pca_dot,
+         height = 7,
+         width = 10)
+```
+
+```{r}
+afr_pca_dot <- ggplot(invar_pca[invar_pca$Superpopulation == "AFR", ],
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  labs(title = "AFR") + 
+  theme(legend.position = "right") 
+
+eas_pca_dot <- ggplot(invar_pca[invar_pca$Superpopulation == "EAS", ],
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  labs(title = "EAS") + 
+  theme(legend.position = "right") 
+
+amr_pca_dot <- ggplot(invar_pca[invar_pca$Superpopulation == "AMR", ],
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  labs(title = "AMR") + 
+  theme(legend.position = "right") 
+
+sas_pca_dot <- ggplot(invar_pca[invar_pca$Superpopulation == "SAS", ],
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  labs(title = "SAS") + 
+  theme(legend.position = "right") 
+
+eur_pca_dot <- ggplot(invar_pca[invar_pca$Superpopulation == "EUR", ],
+    aes(x = PC1, y = PC2, color = Population)) +
+  geom_point() +
+  scale_fill_brewer(palette = "Set3") +
+  theme_pubclean() +
+  labs(title = "EUR") + 
+  theme(legend.position = "right") 
+
+pop_indiv_pca_dot <- ggarrange(
+  afr_pca_dot, eas_pca_dot, amr_pca_dot, sas_pca_dot, eur_pca_dot,
+  labels = c("A", "B", "C", "D", "E"), ncol = 3, nrow = 2)
+pop_indiv_pca_dot
+ggsave(filename = paste0(figs_dir, "/pop_indiv_pca.svg"),
+         plot = pop_indiv_pca_dot,
+         height = 8,
+         width = 15)
 ```
